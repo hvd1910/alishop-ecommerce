@@ -25,6 +25,8 @@ import ViewOrder from "../admin/pages/OrderAdmin/ViewOrder";
 import OrderListReject from "../admin/pages/OrderAdmin/OrderListReject";
 import { ToastSuccess } from "../admin/components/BodyMain/notification/Notification";
 import ContactList from "../admin/pages/ContactAdmin/ContactList";
+import CouponList from "../admin/pages/CouponAdmin/CouponList";
+import Dashboard from "../admin/components/BodyMain/Dashboard/Dashboard";
 
 const AdminRouter = () => {
   const jwt = localStorage.getItem("jwtAdmin");
@@ -74,7 +76,7 @@ const AdminRouter = () => {
                 <div className="ec-page-wrapper">
                   <Header />
                   <Routes>
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/users" element={<UserList />} />
                     <Route path="/users/add" element={<AddUser />} />
                     <Route
@@ -91,6 +93,10 @@ const AdminRouter = () => {
                     <Route path="/orders/rejected" element={<OrderListReject />} />
                     <Route path="/orders/:orderId" element={<ViewOrder />} />
                     <Route path='/contacts' element={<ContactList/>}></Route>
+
+
+                    <Route path='/coupons' element={<CouponList/>}></Route>
+
 
                   </Routes>
                   <Footer />

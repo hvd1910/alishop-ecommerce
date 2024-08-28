@@ -15,14 +15,15 @@ const DeliveryAddressForm = () => {
   const cart  = useSelector(GetCart)
   const [paymentMethod, setPaymentMethod] = useState('pod');
   const [deliveryMethod, setDeliveryMethod] = useState('Free')
-  const [voucher, setVoucher] = useState('');
-  const [valueVoucher, setValueVoucher] = useState(0)
+  const [voucher, setVoucher] = useState(null);
+  const [couponSuccess, setCouponSuccess] = useState(null);
   const [valueDel, setValueDel] = useState(0)
+  const [totalAmount, setTotalAmount] = useState((Number(cart?.totalAmount) + valueDel).toFixed(1))
+  const [totalDiscount, setTotalDiscount] = useState(cart?.totalDiscount)
 
   
   
-
-  const totalAmount = (Number(cart?.totalAmount) + valueDel).toFixed(1)
+  
 
   const handlePayChange = (paythod) => {
     setPaymentMethod(paythod);
@@ -35,9 +36,11 @@ const DeliveryAddressForm = () => {
     setVoucher(event.target.value);
   };
 
-  const handleVoucher = () => {
-    // console.log('Voucher applied:', voucher);
+  const handleVoucher = (e) => {
+    getVoucherCaculator(voucher, totalAmount)
   };
+
+
 
 
     const handleSubmit = (e) => {
@@ -51,11 +54,14 @@ const DeliveryAddressForm = () => {
           phone_number:data.get("phone_number"),
           address:data.get("address"),
           note: data.get("note"),
+          coupon_code: couponSuccess || '',
           shipping_method: deliveryMethod,
           payment_method: paymentMethod,
           total_money: totalAmount,
           cart_items: cart?.carts
       }
+
+
       const emailData = {
         "toEmail": data.get("email"),
         "subject": "Order Successfully By AliShop",
@@ -114,6 +120,7 @@ const DeliveryAddressForm = () => {
           }
         }
 
+
         async function sentEmail(emailData) {
           try{
             
@@ -128,6 +135,29 @@ const DeliveryAddressForm = () => {
             // ToastError(error.response.data.message)
           }
         }
+
+
+       
+    }
+
+    async function getVoucherCaculator(couponCode, totalAmount) {
+      try{
+        const response = await All_API.getVoucherCaculator(couponCode, totalAmount)
+        if(response.data.status === "success") {
+          if(totalAmount > response.data.data.total_amount) {
+            setCouponSuccess(voucher)
+            setTotalAmount(response.data.data.total_amount.toFixed(1))
+            setTotalDiscount((cart?.totalCartPrice - response.data.data.total_amount).toFixed(1))
+            ToastSuccess("Apply coupon successfully.")
+          }else{
+            ToastError("Apply coupon failed.")
+          }
+        }else {
+          ToastError(response.data.message)
+        }
+      }catch (error){
+        ToastError(error.response.data.message)
+      }
     }
 
 
@@ -405,7 +435,21 @@ const DeliveryAddressForm = () => {
           <div className="mb-6">
             <label htmlFor="voucher" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Enter a gift card, voucher or promotional code </label>
             <div className="flex max-w-md items-center gap-4">
-              <input type="text" value={voucher} onChange={handleVoucherChange} id="voucher" name="voucher" className="block w-full rounded-lg border-1 border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-300 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" placeholder="Enter your voucher code"   />
+            <input
+  type="text"
+  value={voucher}
+  onChange={handleVoucherChange}
+  id="voucher"
+  name="voucher"
+  className={`block w-full rounded-lg border-1 p-2.5 text-sm focus:border-primary-500 focus:ring-primary-500 ${
+    couponSuccess !== null
+      ? "bg-gray-100 text-gray-400 cursor-not-allowed" // Darker background when disabled
+      : "bg-gray-50 text-gray-900"
+  } dark:border-gray-300 dark:bg-gray-100 dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500`}
+  placeholder="Enter your voucher code"
+  disabled={couponSuccess !== null} // Disable input if couponId is not null
+/>
+
               <button 
                 type="button" 
                 onClick={handleVoucher} 
@@ -440,7 +484,7 @@ const DeliveryAddressForm = () => {
                 >
                   <span>Disccount</span>
                   <span className="text-gray-700">
-                    -${cart?.totalDiscount}
+                    -${totalDiscount}
                   </span>
                 </div>
                 <div

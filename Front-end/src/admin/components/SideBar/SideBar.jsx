@@ -23,7 +23,7 @@ const SideBar = () => {
 			<div id="sidebar" className="sidebar ec-sidebar-footer">
 
 				<div className="ec-brand">
-					<a href="index.html">
+					<a  onClick={()=> navigate('/admin')}>
 						<img className="ec-brand-icon" src="assets/img/logo/favicon.png" alt="" />
 						<span className="ec-brand-name text-truncate">ALISHOP</span>
 					</a>
@@ -35,45 +35,14 @@ const SideBar = () => {
 					<ul className="nav sidebar-inner" id="sidebar-menu">
 						{/* <!-- Dashboard --> */}
 						<li className="active">
-							<a className="sidenav-item-link" href="index.html">
+							<a className="sidenav-item-link" onClick={()=> navigate('/admin')}>
 								<i className="mdi mdi-view-dashboard-outline"></i>
 								<span className="nav-text">Dashboard</span>
 							</a>
 							<hr/>
 						</li>
 
-						{/* <!-- Vendors --> */}
-						{/* <li className="has-sub">
-							<a className="sidenav-item-link" >
-								<i className="mdi mdi-briefcase-outline"></i>
-								<span className="nav-text">Vendors</span> <b className="caret"></b>
-							</a>
-							<div className="collapse">
-								<ul className="sub-menu" id="vendors" data-parent="#sidebar-menu">
-									<li className="">
-										<a className="sidenav-item-link" href="vendor-card.html">
-											<span className="nav-text">Vendor Grid</span>
-										</a>
-									</li>
-
-									<li className="">
-										<a className="sidenav-item-link" href="vendor-list.html">
-											<span className="nav-text">Vendor List</span>
-										</a>
-									</li>
-									<li className="">
-										<a className="sidenav-item-link" href="vendor-profile.html">
-											<span className="nav-text">Vendors Profile</span>
-										</a>
-									</li>
-									<li className="">
-										<a className="sidenav-item-link" href="add-vendor.html">
-											<span className="nav-text">Add Vendors</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li> */}
+						
 
 						{/* <!-- Users --> */}
 						<li className={`has-sub ${openItemMenu===0 ? 'expand':''}`} onClick={()=>handleOpenItemMenu(0)}>
@@ -157,10 +126,28 @@ const SideBar = () => {
 							</div>
 						</li>
 
+
+						<li className={`has-sub ${openItemMenu===6 ? 'expand':''}`} onClick={()=>handleOpenItemMenu(6)}>
+							<a className="sidenav-item-link" href="javascript:void(0)">
+							<i className="mdi mdi-tag-outline"></i>
+							<span className="nav-text">Coupons</span> <b className="caret"></b>
+							</a>
+							<div className="collapse"  style={{display: openItemMenu===6 ? 'block': 'none'}}>
+								<ul className="sub-menu" id="authentication" data-parent="#sidebar-menu">
+									<li className="">
+									<a className="sidenav-item-link" onClick={()=> navigate('/admin/coupons')}>
+									<span className="nav-text">List Coupons </span>
+										</a>
+									</li>
+								
+								</ul>
+							</div>
+						</li>
+
 						<li className={`has-sub ${openItemMenu===5 ? 'expand':''}`} onClick={()=>handleOpenItemMenu(5)}>
 							<a className="sidenav-item-link" href="javascript:void(0)">
 								<i className="mdi mdi-receipt"></i>
-								<span className="nav-text">Contact</span> <b className="caret"></b>
+								<span className="nav-text">Contacts</span> <b className="caret"></b>
 							</a>
 							<div className="collapse"  style={{display: openItemMenu===5 ? 'block': 'none'}}>
 								<ul className="sub-menu" id="authentication" data-parent="#sidebar-menu">

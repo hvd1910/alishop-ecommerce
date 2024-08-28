@@ -64,7 +64,11 @@ const ContactDetail = ({idObject, handleCancel, onUpdate}) => {
 												   <label htmlFor="text" className="col-form-label">Updated At</label> 
 													<input id="updatedAt" name="updatedAt" className="form-control-2 here slug-title" type="text"  value={ConvertDateTime(contact?.updatedAt)} disabled/>
 											</div>
-        
+                      <div className="row ">
+												<div className="col-12 ">
+                                                    <button onClick={()=>handleCancel()} className="btn btn-border ">Cancel</button>
+												</div>
+											</div>
                     </form>
 
                 </div>

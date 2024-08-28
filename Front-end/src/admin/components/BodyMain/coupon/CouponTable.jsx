@@ -2,48 +2,46 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import All_API from "../../../../State/Auth/All_API";
 import { Pagination, Stack } from "@mui/material";
-import AddUser from "../../../pages/UserAdmin/AddUser";
-import UpdateUser from "../../../pages/UserAdmin/UpdateUser";
-import UserView from "../../../pages/UserAdmin/UserView";
-import DeleteLayout from "../DeleteLayout/DeleteLayout";
 import { ToastError, ToastSuccess } from "../notification/Notification";
+import ViewContact from "../../../pages/ContactAdmin/ViewContact";
+import DeleteLayout from "../DeleteLayout/DeleteLayout";
+import AddCoupon from "../../../pages/CouponAdmin/AddCoupon";
+import UpdateCoupon from "../../../pages/CouponAdmin/UpdateCoupon";
+import ViewCoupon from "../../../pages/CouponAdmin/ViewCoupon";
+import CouponCondition from "../../../pages/CouponConditionAdmin/CouponCondition";
 
-const UsersTable = () => {
+const CouponTable = () => {
   const [openAtion, setOpenAction] = useState(null);
   const navigate = useNavigate();
 
-  const [users, setUsers] = useState([]);
+  const [coupons, setCoupons] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [idObject, setIdObject] = useState("");
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(2);
   const [page, setPage] = useState(0);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openConditionModal, setOpenConditionModal] = useState(false);
+
   const timeoutRef = useRef(null);
 
 
-  async function getAllUsers(data) {
-    try {
-      const response = await All_API.getAllUsers(data);
-      setUsers(response.data.data.users);
-      setTotalPages(response.data.data.totalPages);
-    } catch {}
-  }
+  
 
   const handleLoading = ()=> {
 	setLoading(!loading)
   }
 
   const handleAddOpen = () => {
-	setOpenAddModal(true);
+    setOpenAddModal(true);
   };
 
   const handleAddClose = () => {
-	setOpenAddModal(false);
+    setOpenAddModal(false);
   };
 
   const handleViewOpen = () => {
@@ -72,6 +70,14 @@ const UsersTable = () => {
 	setOpenDeleteModal(false);
   };
 
+  const handleConditionOpen = () => {
+	setOpenConditionModal(true);
+  };
+
+  const handleConditionClose = () => {
+	setOpenConditionModal(false);
+  };
+
   const handleAction = (id) => {
 	if (openAtion === id) {
 	  setOpenAction(null);
@@ -95,14 +101,16 @@ const handleSelectChange = (e) => {
 	setLimit(Number(e.target.value));
 };
 
+
+
 const handlePaginate =  (event, value) => {
   setPage(value -1); // Cập nhật số trang hiện tại khi người dùng chuyển trang
 };
 
 
-async function deleteUser(id) {
+async function deleteCoupon(id) {
 	try{
-	  const response = await All_API.deleteUserById(id)
+	  const response = await All_API.deleteCoupon(id)
 	  if(response.data.status === "success") {
 		  ToastSuccess(response.data.message)
 		  handleLoading()
@@ -118,22 +126,29 @@ async function deleteUser(id) {
 	}
 }
 
+async function getAllContact(data) {
+    try {
+      const response = await All_API.getAllCoupon(data);
+      setCoupons(response.data.data.content);
+      setTotalPages(response.data.data.totalPages);
+    } catch {}
+  }
 
 
   useEffect(() => {
     const data = {
       page: page || 0,
-      limit: limit || 10,
+      limit: limit || 2,
       keyword: keyword || "",
     };
-    getAllUsers(data);
+    getAllContact(data);
   }, [loading, keyword, limit, page]);
 
   return (
 	<Fragment>
 	<div className="breadcrumb-wrapper d-flex align-items-center justify-content-between">
 	  <div>
-		<h1>All User</h1>
+		<h1>All Coupon</h1>
 		<p className="breadcrumbs">
 		  <span onClick={() => navigate("/admin")}>
 			<a>Home</a>
@@ -141,15 +156,16 @@ async function deleteUser(id) {
 		  <span>
 			<i className="mdi mdi-chevron-right"></i>
 		  </span>
-		  All User
+		  All Coupon
 		</p>
 	  </div>
 	  <div>
-		<a onClick={()=>handleAddOpen()} className="btn btn-primary btn-admin">
-		  Add User
-		</a>
-	  </div>
+          <a onClick={()=>handleAddOpen()} className="btn btn-primary btn-admin">
+            Add Coupon
+          </a>
+        </div>
 	</div>
+
   <div className="row">
   <div className="col-12">
 	  <div className="card card-default">
@@ -167,6 +183,7 @@ async function deleteUser(id) {
 					<option value="50">50</option>
 					</select> entries</label></div>
 					<div id="responsive-data-table_filter" className="dataTables_filter">
+					
 					  <label>Search:<input type="search" onChange={handleInputChange} className="form-control form-control-sm" 
 					  placeholder="" aria-controls="responsive-data-table"/>
 						</label>
@@ -177,32 +194,25 @@ async function deleteUser(id) {
 					  <thead>
 					  <tr>
 							  <th>ID</th>
-							  <th>Full Name</th>
-							  <th>Phone</th>
-							  <th>Email</th>
-							  <th>Birthday</th>
+							  <th>Code</th>
+							  <th>Usage Limit</th>
 							  <th>Status</th>
-							  <th>Role</th>
 							  <th>Action</th>
 						  </tr>
 						 
 					  </thead>
 
 					  <tbody>
-					  {users?.map((user) => (<tr  key={user.id}>
-							  <td>{user.id}</td>
-							  <td>{user.fullname}</td>
-							  <td>{user.phone_number}</td>
-							  <td>{user.email}</td>
-							  <td>{user.date_of_birth}</td>
-							  <td>{user.is_active === true ? <button className="badge badge-success btn-status">Active</button>: <button className="badge badge-danger btn-status">Locked</button>}</td>
-
-							  <td>{user.role.name.toUpperCase()}</td>
+					  {coupons?.map((coupon) => (<tr  key={coupon.id}>
+							  <td>{coupon.id}</td>
+							  <td>{coupon.code}</td>
+                              <td>{coupon.usageLimit}</td>
+							  <td>{coupon.active === true ? <button className="badge badge-success btn-status" >Active</button>: <button className="badge badge-danger btn-status">Block</button>}</td>
 							  <td>
 					  <div className="btn-group">
 						<button
 						   onClick={()=> {
-							setIdObject(user.id)
+							setIdObject(coupon.id)
 							handleViewOpen()
 						   }}
 						  type="button"
@@ -212,7 +222,7 @@ async function deleteUser(id) {
 						</button>
 						<button
 						  type="button"
-						  onClick={() => handleAction(user.id)}
+						  onClick={() => handleAction(coupon.id)}
 						  className="btn btn-menu-2 btn-outline-success btn-menu dropdown-toggle dropdown-toggle-split"
 						  data-bs-toggle="dropdown"
 						  aria-haspopup="true"
@@ -221,17 +231,24 @@ async function deleteUser(id) {
 						>
 						  <span className="sr-only">Info</span>
 						</button>
-						{openAtion === user.id && (
+						{openAtion === coupon.id && (
 						  <div className="dropdown-menu dropdown-menulist">
 							<a className="dropdown-item" onClick={()=> {
-								setIdObject(user.id)
+								setIdObject(coupon.id)
+								handleConditionOpen()
+								setOpenAction(null)
+							}}>
+							  Manage Conditions
+							</a>
+							<a className="dropdown-item" onClick={()=> {
+								setIdObject(coupon.id)
 								handleUpdateOpen()
 								setOpenAction(null)
 							}}>
 							  Edit
 							</a>
 							<a className="dropdown-item" onClick={()=>{
-							  setIdObject(user.id)
+							  setIdObject(coupon.id)
 							  handleDeleteOpen()
 							  setOpenAction(null) 
 							  }}>
@@ -243,8 +260,6 @@ async function deleteUser(id) {
 					</td>
 						  </tr>))}
 						  
-
-					   
 
 					  </tbody>
 				  </table>
@@ -259,27 +274,30 @@ async function deleteUser(id) {
 	  </div>
   </div>
 </div>
-
 	{openAddModal && (
-		<AddUser open={openAddModal} handleClose={handleAddClose} onCreate={handleLoading} />
-	  )}
-	  
+          <AddCoupon open={openAddModal} handleClose={handleAddClose} onCreate={handleLoading} />
+        )}
+
 	  {openViewModal && (
-		<UserView open={openViewModal} handleClose={handleViewClose} idObject={idObject} />
+		<ViewCoupon open={openViewModal} handleClose={handleViewClose} idObject={idObject} />
 	  )}
 	  
 	  
 
 	  {openUpdateModal && (
-          <UpdateUser open={openUpdateModal} handleClose={handleUpdateClose} idObject={idObject} onUpdate={handleLoading} />
+          <UpdateCoupon open={openUpdateModal} handleClose={handleUpdateClose} idObject={idObject} onUpdate={handleLoading} />
         )}
 
 
 
-	{openDeleteModal && <DeleteLayout  open={openDeleteModal} handleClose={handleDeleteClose} idObject={idObject} deleteFunction={deleteUser} onDelete={handleLoading}/>}
+	{openDeleteModal && <DeleteLayout  open={openDeleteModal} handleClose={handleDeleteClose} idObject={idObject} deleteFunction={deleteCoupon} onDelete={handleLoading}/>}
 
+
+	{openConditionModal && (
+          <CouponCondition open={openConditionModal} handleClose={handleConditionClose} couponId={idObject} />
+        )}
   </Fragment>
   );
 };
 
-export default UsersTable;
+export default CouponTable;

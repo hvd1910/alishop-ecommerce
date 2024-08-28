@@ -9,9 +9,9 @@ const Footer = () => {
   return (
     <div>
       <Grid
-        className="bg-[#999999] text-white text-center mt-10"
+        className="bg-[#080808] text-white text-center mt-10"
         container
-        sx={{ bgcolor: "#999999", color: "white", py: 3 }}
+        sx={{ bgcolor: "#080808", color: "white", py: 3 }}
       >
         <Grid item xs={12} sm={6} md={4} sx={{padding:" 0 0 0 66px"}} className="text-left">
           <Typography className="pb-1" >
@@ -30,7 +30,7 @@ const Footer = () => {
                      <div className="flex flex-col mx-auto mt-2 space-y-3 md:space-y-0 md:flex-row mr-8">
                     <input  id="email" type="text" className="px-2 h-[34px] text-gray-700 bg-white border rounded-md dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300" placeholder="Email Address" />
             
-                    <button className="w-full px-1.5 h-[34px] text-sm font-medium tracking-wider text-white transition-colors duration-300 transform md:w-auto md:mx-4 focus:outline-none bg-gray-800 rounded-lg hover:bg-gray-700 focus:ring focus:ring-gray-300 focus:ring-opacity-80">
+                    <button className="w-full px-1.5 h-[34px] text-sm font-medium tracking-wider text-white transition-colors duration-300 transform md:w-auto md:mx-4 focus:outline-none bg-gray-600 rounded-lg hover:bg-gray-700 focus:ring focus:ring-gray-300 focus:ring-opacity-80">
                         Subscribe
                     </button>
                 </div>

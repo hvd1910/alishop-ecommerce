@@ -212,7 +212,8 @@ import { API_BASE_URL, apiAdmin, apiUser } from "../../config/apiConfig";
 
     getUrlBank: (orderId, total)=> {
         const amount = total * 24000;
-        const response =  apiUser.get(`/payment/vn-pay?orderId=${orderId}&amount=${amount}&bankCode=NCB`)
+        const roundedAmount = Math.round(amount);
+        const response =  apiUser.get(`/payment/vn-pay?orderId=${orderId}&amount=${roundedAmount}&bankCode=NCB`)
         return response;
     },
 
@@ -285,7 +286,67 @@ import { API_BASE_URL, apiAdmin, apiUser } from "../../config/apiConfig";
     },
    
 
+
+    getAllCoupon: (data)=> {
+        const {
+            page,
+            limit,
+            keyword
+          } = data;
+        const response =  apiAdmin.get(`${API_BASE_URL}coupons?page=${page}&limit=${limit}&keyword=${keyword}`);
+        return response;
+    },
+
+    createCoupon: (data) => {
+        const response =  apiAdmin.post(`${API_BASE_URL}coupons`, data)
+        return response;
+    },
+
+    getCouponById: (id) => {
+        const response =  apiAdmin.get(`${API_BASE_URL}coupons/${id}`)
+        return response;
+    },
+
+    updateCoupon: (id, couponData ) => {
+        const response =  apiAdmin.put(`${API_BASE_URL}coupons/${id}`, couponData)
+        return response;
+    },
    
+    deleteCoupon: (id ) => {
+        const response =  apiAdmin.delete(`${API_BASE_URL}coupons/${id}`)
+        return response;
+    },
+
+    getCouponConditionAll: (id) => {
+        const response =  apiAdmin.get(`${API_BASE_URL}couponconditions/coupon/${id}`)
+        return response;
+    },
+   
+
+    createCouponCondition: (data) => {
+        const response =  apiAdmin.post(`${API_BASE_URL}couponconditions`, data)
+        return response;
+    },
+
+    
+    updateCouponCondition: (id, data) => {
+        const response =  apiAdmin.put(`${API_BASE_URL}couponconditions/${id}`, data)
+        return response;
+    },
+
+    deleteCouponCondition: (id) => {
+        const response =  apiAdmin.delete(`${API_BASE_URL}couponconditions/${id}`)
+        return response;
+    },
+
+
+    getVoucherCaculator: (couponCode,totalAmount) => {
+        const response =  apiUser.get(`${API_BASE_URL}coupons/calculate?couponCode=${couponCode}&totalAmount=${totalAmount}`)
+        return response;
+    },
+
+       
+  
 
 }
 

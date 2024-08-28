@@ -122,7 +122,7 @@ const CategoryTable = () => {
           <div className="ec-cat-list card card-default">
             <div className="card-body">
               <div className="table-responsive">
-                <table id="responsive-data-table" className="table">
+                <table id="responsive-data-table " className="table">
                   <thead>
                     <tr>
                       <th>ID</th>

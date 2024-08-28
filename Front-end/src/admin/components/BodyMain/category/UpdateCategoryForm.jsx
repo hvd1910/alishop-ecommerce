@@ -81,7 +81,9 @@ const UpdateCategoryForm = ({idObject, handleCancel, onUpdate}) => {
 											</div>
 
 											<div className="row">
-												<div className="col-12">
+												<div className="col-12 ">
+												<button onClick={()=>handleCancel()} className="btn btn-border mr-4">Cancel</button>
+
 													<button name="submit" type="submit" className="btn btn-primary btn-admin">Update</button>
 												</div>
 											</div>

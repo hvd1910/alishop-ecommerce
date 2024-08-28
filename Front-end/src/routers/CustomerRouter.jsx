@@ -29,7 +29,6 @@ const CustomerRouter = () => {
     <Route path='/account' element={<ProfileDetail/>}></Route>
     <Route path='/account/orders/:orderId' element={<OrderDetail/>}></Route>
     <Route path='/contact' element={<Contact/>}></Route>
-
     </Routes>
     <div>
     <Footer/>

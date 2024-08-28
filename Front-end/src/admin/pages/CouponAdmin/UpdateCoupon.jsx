@@ -1,11 +1,11 @@
 import React from 'react'
 import Modal from '@mui/material/Modal';
 import { Box } from '@mui/material';
-import UpdateCategoryForm from '../../components/BodyMain/category/UpdateCategoryForm';
+import UpdateCouponForm from '../../components/BodyMain/coupon/UpdateCouponForm';
 
 const style = {
   position: 'absolute',
-  top: '40%',
+  top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: "500px",
@@ -13,7 +13,7 @@ const style = {
   
 } ;
 
-const UpdateCategory = ({idObject, handleClose, open, onUpdate}) => {
+const UpdateCoupon = ({idObject, handleClose, open, onUpdate}) => {
   const handleCancelClick = () => {
     handleClose()
   };
@@ -25,10 +25,10 @@ const UpdateCategory = ({idObject, handleClose, open, onUpdate}) => {
     aria-describedby="modal-modal-description"
   >
       <Box sx={style}>
-      <UpdateCategoryForm handleCancel={handleCancelClick} idObject={idObject} onUpdate={onUpdate} />
+      <UpdateCouponForm handleCancel={handleCancelClick} idObject={idObject} onUpdate={onUpdate} />
       </Box>
   </Modal>
   )
 }
 
-export default UpdateCategory
+export default UpdateCoupon
