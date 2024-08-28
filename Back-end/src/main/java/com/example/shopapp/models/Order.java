@@ -74,5 +74,9 @@ public class Order  extends BaseEntity{
     @JsonManagedReference
     private List<OrderDetail> orderDetails;
 
+    @ManyToOne
+    @JoinColumn(name = "coupon_id")
+    @JsonBackReference
+    private Coupon coupon;
 
 }

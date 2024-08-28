@@ -30,6 +30,7 @@ public class OrderService implements IOrderService{
     private final ProductRespository productRespository;
     private final OrderDetailRespository orderDetailRespository;
     private final ProductDetailRespository productDetailRespository;
+    private final CouponRepository couponRepository;
     @Override
     @Transactional
     public OrderResponse createOrder(OrderDTO orderDTO) throws Exception {
@@ -85,6 +86,8 @@ public class OrderService implements IOrderService{
         User user = userRepository
                 .findById(orderDTO.getUserId())
                 .orElseThrow(()-> new DataNotFoundException("Cannot find user with id: "+ orderDTO.getUserId()));
+
+
         // Convert orderDTO => Order
         // use libary ModelMapper
         //Tạo một luồng bảng ảnh xạ riêng để  kiểm soát  việc ánh xạ
@@ -99,14 +102,37 @@ public class OrderService implements IOrderService{
         order.setActive(true);
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
+        order.setCoupon(null);
+
+
+        if (orderDTO.getCouponCode() != null && !orderDTO.getCouponCode().trim().isEmpty()) {
+            Coupon coupon = couponRepository.findByCode(orderDTO.getCouponCode())
+                    .orElseThrow(() -> new DataNotFoundException("Cannot find coupon with code: " + orderDTO.getCouponCode()));
+
+            // Cập nhật số lượng sử dụng của coupon
+            if (coupon.getUsageLimit() > 0) {
+                order.setCoupon(coupon);
+                coupon.setUsageLimit(coupon.getUsageLimit() - 1);
+                couponRepository.save(coupon); // Lưu lại coupon đã cập nhật
+            } else {
+                // Xử lý khi số lượng sử dụng đã đạt giới hạn, nếu cần
+                throw new RuntimeException("Coupon usage limit exceeded");
+            }
+        }
+
         orderRespository.save(order);
 
-        // Duyệt lại orderDetail và setsetOrder
+
+
+            // Duyệt lại orderDetail và setsetOrder
         for (OrderDetail orderDetail : orderDetails) {
             orderDetail.setOrder(order);
         }
         // Lưu danh sách OrderDetail vào CSDL
         orderDetailRespository.saveAll(orderDetails);
+
+
+
 
 
 //        OrderDetail, duyệt qua để trừ số lượng sản phẩm trong ProductDetail
